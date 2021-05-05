@@ -20,10 +20,15 @@ defmodule Identicon do
     %Image{image | color: {r, g, b}}
   end
 
-  defp build_grid(%Image{hex: hex} = _image) do
-    hex
-    |> Enum.chunk_every(3, 3, :discard)
-    |> Enum.map(&mirror_row/1)
+  defp build_grid(%Image{hex: hex} = image) do
+    grid =
+      hex
+      |> Enum.chunk_every(3, 3, :discard)
+      |> Enum.map(&mirror_row/1)
+      |> List.flatten()
+      |> Enum.with_index()
+
+    %Image{image | grid: grid}
   end
 
   defp mirror_row(row) do
